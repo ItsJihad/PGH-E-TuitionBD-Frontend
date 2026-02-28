@@ -8,6 +8,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+
 import { useAxiosSecure } from "../../../../hooks/UseAxios";
 import UseAuth from "../../../../hooks/UseAuth";
 import LoadingPage from "../../../../components/Loader/LoadingPage";
@@ -22,56 +23,49 @@ export default function MyTuitions() {
   const axios = useAxiosSecure();
   const { currentUser } = UseAuth();
 
+  /* ================= FETCH POSTS ================= */
   useEffect(() => {
     if (!currentUser) return;
 
-    const FetchData = async () => {
+    const fetchData = async () => {
       setLoader(true);
       const res = await axios.get("/student/alluserposts");
       setPosts(res.data.data);
       setLoader(false);
     };
 
-    FetchData();
+    fetchData();
   }, [currentUser]);
 
   if (loader) return <LoadingPage />;
 
+  /* ================= EDIT ================= */
   const handleEdit = (post) => {
     setSelectedPost(post);
     setIsOpen(true);
   };
 
   const closeModal = () => {
-    setIsOpen(false);
     setSelectedPost(null);
+    setIsOpen(false);
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setSelectedPost({
-      ...selectedPost,
-      [name]: value,
-    });
+    setSelectedPost((prev) => ({ ...prev, [name]: value }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to update this post?",
+    const confirm = await Swal.fire({
+      title: "Update post?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#4f46e5",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, update it!",
+      confirmButtonText: "Update",
     });
 
-    if (!result.isConfirmed) return;
+    if (!confirm.isConfirmed) return;
 
     try {
       const updatedData = {
@@ -84,108 +78,107 @@ export default function MyTuitions() {
 
       await axios.patch(
         `/student/post/update/${selectedPost._id}`,
-        updatedData,
+        updatedData
       );
 
-      const updatedPosts = posts.map((post) =>
-        post._id === selectedPost._id ? selectedPost : post,
+      setPosts((prev) =>
+        prev.map((p) =>
+          p._id === selectedPost._id ? selectedPost : p
+        )
       );
-
-      setPosts(updatedPosts);
 
       closeModal();
 
-      Swal.fire("Updated!", "Your post has been updated.", "success");
-    } catch (error) {
-      console.error(error);
-      Swal.fire("Error!", "Something went wrong.", "error");
+      Swal.fire("Updated!", "", "success");
+    } catch {
+      Swal.fire("Error", "Something went wrong", "error");
     }
   };
 
-
+  /* ================= DELETE ================= */
   const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This post will be permanently deleted!",
+    const confirm = await Swal.fire({
+      title: "Delete this post?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Delete",
     });
 
-    if (!result.isConfirmed) return;
+    if (!confirm.isConfirmed) return;
 
     try {
       await axios.delete(`/student/post/delete/${id}`);
-
-      const updatedPosts = posts.filter((post) => post._id !== id);
-      setPosts(updatedPosts);
-
-      Swal.fire("Deleted!", "Your post has been deleted.", "success");
-    } catch (error) {
-      console.error(error);
-      Swal.fire("Error!", "Something went wrong.", "error");
+      setPosts((prev) => prev.filter((p) => p._id !== id));
+      Swal.fire("Deleted!", "", "success");
+    } catch {
+      Swal.fire("Error", "Something went wrong", "error");
     }
   };
 
   return (
     <div className="space-y-10">
+
+      {/* HEADER */}
       <header>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold text-primary">
           My Tuition Posts
         </h1>
-        <p className="text-slate-500 mt-2">
+        <p className="text-base-content/70 mt-2">
           Manage and update your tuition requests.
         </p>
       </header>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      {/* POSTS GRID */}
+      <div className="grid md:grid-cols-2 gap-6">
         {posts.map((post) => (
           <div
             key={post._id}
-            className="group relative bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+            className="bg-base-200 border border-base-300 rounded-xl p-6 hover:shadow-lg transition"
           >
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition"></div>
-
-            <div className="flex items-center gap-2 text-indigo-600 font-semibold text-lg">
+            {/* Title */}
+            <div className="flex items-center gap-2 font-semibold text-lg text-primary">
               <BookOpen size={20} />
               {post.subject}
             </div>
 
-            <p className="text-sm text-slate-500 mt-1">{post.classLevel}</p>
+            <p className="text-sm text-base-content/70 mt-1">
+              {post.classLevel}
+            </p>
 
-            <div className="flex items-start gap-2 mt-4 text-slate-600 text-sm">
-              <FileText size={16} className="mt-1 text-slate-400" />
+            {/* Description */}
+            <div className="flex items-start gap-2 mt-4 text-sm text-base-content/80">
+              <FileText size={16} className="mt-1 opacity-60" />
               <span>{post.description}</span>
             </div>
 
+            {/* Meta */}
             <div className="flex flex-wrap gap-4 mt-4 text-sm">
-              <div className="flex items-center gap-2 text-slate-600">
-                <MapPin size={16} className="text-rose-500" />
+              <div className="flex items-center gap-2">
+                <MapPin size={16} />
                 {post.location}
               </div>
 
-              <div className="flex items-center gap-2 text-slate-600">
-                <BadgeDollarSign size={16} className="text-emerald-600" />৳
-                {post.budget}/month
+              <div className="flex items-center gap-2 text-success">
+                <BadgeDollarSign size={16} />
+                ৳{post.budget}/month
               </div>
             </div>
 
-            <div className="flex gap-4 mt-6">
+            {/* Actions */}
+            <div className="flex gap-3 mt-6">
               <button
                 onClick={() => handleEdit(post)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all duration-300"
+                className="btn btn-outline btn-primary btn-sm gap-2"
               >
-                <Pencil size={16} />
+                <Pencil size={14} />
                 Edit
               </button>
 
               <button
                 onClick={() => handleDelete(post._id)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all duration-300"
+                className="btn btn-outline btn-error btn-sm gap-2"
               >
-                <Trash2 size={16} />
+                <Trash2 size={14} />
                 Delete
               </button>
             </div>
@@ -193,32 +186,36 @@ export default function MyTuitions() {
         ))}
       </div>
 
-     
+      {/* ================= MODAL ================= */}
       {isOpen && selectedPost && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="relative w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl">
+        <div className="modal modal-open">
+          <div className="modal-box max-w-lg">
+
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 text-slate-500 hover:text-slate-800"
+              className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
             >
-              <X size={20} />
+              <X size={16} />
             </button>
 
-            <h2 className="text-xl font-bold mb-6">Update Tuition Post</h2>
+            <h3 className="font-bold text-lg mb-6">
+              Update Tuition Post
+            </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+
               <input
                 name="subject"
                 value={selectedPost.subject}
                 onChange={handleChange}
-                className="w-full mt-1 border border-slate-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="input input-bordered w-full"
               />
 
               <input
                 name="classLevel"
                 value={selectedPost.classLevel}
                 onChange={handleChange}
-                className="w-full mt-1 border border-slate-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="input input-bordered w-full"
               />
 
               <input
@@ -226,14 +223,14 @@ export default function MyTuitions() {
                 type="number"
                 value={selectedPost.budget}
                 onChange={handleChange}
-                className="w-full mt-1 border border-slate-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="input input-bordered w-full"
               />
 
               <input
                 name="location"
                 value={selectedPost.location}
                 onChange={handleChange}
-                className="w-full mt-1 border border-slate-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="input input-bordered w-full"
               />
 
               <textarea
@@ -241,15 +238,13 @@ export default function MyTuitions() {
                 value={selectedPost.description}
                 onChange={handleChange}
                 rows={3}
-                className="w-full mt-1 border border-slate-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+                className="textarea textarea-bordered w-full"
               />
 
-              <button
-                type="submit"
-                className="w-full mt-4 bg-indigo-600 text-white py-2.5 rounded-xl hover:bg-indigo-700 transition"
-              >
+              <button className="btn btn-primary w-full mt-2">
                 Save Changes
               </button>
+
             </form>
           </div>
         </div>

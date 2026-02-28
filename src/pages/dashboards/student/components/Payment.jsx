@@ -2,88 +2,91 @@ import { CheckCircle2, Clock, CreditCard } from "lucide-react";
 
 export default function Payments() {
   return (
-    <div className="relative space-y-12">
+    <div className="space-y-12">
 
-      {/* Background Glow */}
-      <div className="absolute -top-20 -left-20 w-72 h-72 bg-indigo-500/10 blur-3xl rounded-full"></div>
-      <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-500/10 blur-3xl rounded-full"></div>
-
-      {/* Header */}
-      <header className="relative">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+      {/* HEADER */}
+      <header>
+        <h1 className="text-3xl font-bold text-primary">
           Payments
         </h1>
-        <p className="text-slate-500 mt-2 text-lg">
+
+        <p className="text-base-content/70 mt-2 text-lg">
           Track your completed and pending transactions.
         </p>
-
-        <div className="mt-6 w-24 h-1 rounded-full bg-gradient-to-r from-indigo-600 to-blue-500"></div>
       </header>
 
-      {/* Table Card */}
-      <div className="relative bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl overflow-hidden">
+      {/* TABLE CARD */}
+      <div className="bg-base-200 border border-base-300 rounded-xl shadow-sm">
 
         {/* Card Header */}
-        <div className="flex items-center gap-3 px-8 py-6 border-b border-slate-200/60">
-          <CreditCard className="text-indigo-600" size={22} />
-          <h2 className="text-lg font-semibold text-slate-800">
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-base-300">
+          <CreditCard size={20} className="text-primary" />
+          <h2 className="font-semibold text-lg">
             Transaction History
           </h2>
         </div>
 
         {/* Responsive Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="text-slate-500 border-b bg-slate-50/50">
+          <table className="table table-zebra">
+
+            <thead>
               <tr>
-                <th className="py-4 px-8 font-medium">Tutor</th>
-                <th className="font-medium">Amount</th>
-                <th className="font-medium">Status</th>
-                <th className="font-medium pr-8">Date</th>
+                <th>Tutor</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-slate-200/60">
+            <tbody>
 
               {/* Paid Row */}
-              <tr className="hover:bg-indigo-50/40 transition">
-                <td className="py-5 px-8 font-semibold text-slate-800">
+              <tr>
+                <td className="font-medium">
                   Asadullah
                 </td>
-                <td className="text-slate-700 font-medium">
+
+                <td className="font-semibold">
                   ৳10,000
                 </td>
+
                 <td>
-                  <span className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="badge badge-success gap-1">
                     <CheckCircle2 size={14} />
                     Paid
                   </span>
                 </td>
-                <td className="text-slate-500 pr-8">
+
+                <td className="text-base-content/60">
                   Jan 12, 2026
                 </td>
               </tr>
 
-              {/* Example Pending Row */}
-              <tr className="hover:bg-indigo-50/40 transition">
-                <td className="py-5 px-8 font-semibold text-slate-800">
+              {/* Pending Row */}
+              <tr>
+                <td className="font-medium">
                   Meraz
                 </td>
-                <td className="text-slate-700 font-medium">
+
+                <td className="font-semibold">
                   ৳8,000
                 </td>
+
                 <td>
-                  <span className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                  <span className="badge badge-warning gap-1">
                     <Clock size={14} />
                     Pending
                   </span>
                 </td>
-                <td className="text-slate-500 pr-8">
+
+                <td className="text-base-content/60">
                   Jan 15, 2026
                 </td>
               </tr>
 
             </tbody>
+
           </table>
         </div>
 

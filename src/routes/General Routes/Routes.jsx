@@ -28,6 +28,7 @@ import ReviewApplications from "../../pages/dashboards/ADMIN/components/Applicat
 import PendingTuition from "../../pages/dashboards/ADMIN/components/PendingTuitions";
 import PendingTutors from "../../pages/dashboards/ADMIN/components/PendingTutors";
 import DashboardHome from "../../pages/dashboards/DashboardHome";
+import RequireRole from "../protectedroleRoutes/RequireRole";
 
 export const GeneralRouter = createBrowserRouter([
   {
@@ -90,7 +91,9 @@ export const GeneralRouter = createBrowserRouter([
     /* ================= STUDENT ================= */
     {
       path: "student",
-      element: <StudentDashboard />,
+      element:<RequireRole allowedRole="student">
+      <StudentDashboard />
+    </RequireRole>,
       children: [
         { index: true, element: <Overview /> }, // ✅ default page
         { path: "my-tuitions", element: <MyTuitions /> },
@@ -104,7 +107,9 @@ export const GeneralRouter = createBrowserRouter([
     /* ================= TEACHER ================= */
     {
       path: "teacher",
-      element: <TeacherDashboard />,
+      element: <RequireRole allowedRole="teacher">
+      <TeacherDashboard />
+    </RequireRole>,
       children: [
         { index: true, element: <TeacherOverview /> }, // ✅ default page
         { path: "my-applications", element: <TeacherApplications /> },
@@ -117,7 +122,9 @@ export const GeneralRouter = createBrowserRouter([
     /* ================= ADMIN ================= */
     {
       path: "admin",
-      element: <AdminDashboard />,
+      element: <RequireRole allowedRole="admin">
+      <AdminDashboard />
+    </RequireRole>,
       children: [
         { index: true, element: <AdminOverview /> }, // ✅ default page
         { path: "review-applications", element: <ReviewApplications /> },

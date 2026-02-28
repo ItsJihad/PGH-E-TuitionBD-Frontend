@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import {
   Mail,
   Phone,
-  Camera,
   Save,
   User,
 } from "lucide-react";
 
 import Swal from "sweetalert2";
-import useAuth from "../../../../hooks/UseAuth"
+import useAuth from "../../../../hooks/UseAuth";
+
 export default function ProfileSettings() {
-  const { currentUser,ProfileUpdate, updateEmail } = useAuth();
+  const { currentUser, ProfileUpdate, updateEmail } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,160 +25,145 @@ export default function ProfileSettings() {
     }
   }, [currentUser]);
 
-  
+  /* ================= UPDATE ================= */
   const handleUpdate = async () => {
     if (!currentUser) return;
 
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to update your profile?",
+    const confirm = await Swal.fire({
+      title: "Update profile?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#4f46e5",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, update!",
+      confirmButtonText: "Update",
     });
 
-    if (!result.isConfirmed) return;
+    if (!confirm.isConfirmed) return;
 
     try {
-      
       await ProfileUpdate(currentUser, {
         displayName: name,
-        photoURL: photoURL,
+        photoURL,
       });
 
-   
       if (email !== currentUser.email) {
         await updateEmail(currentUser, email);
       }
 
       Swal.fire({
         icon: "success",
-        title: "Updated!",
-        text: "Your profile has been updated successfully.",
-        timer: 2000,
+        title: "Profile Updated",
+        timer: 1800,
         showConfirmButton: false,
       });
-
     } catch (error) {
-      console.error(error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: error.message,
-      });
+      Swal.fire("Error", error.message, "error");
     }
   };
 
   return (
-    <div className="relative max-w-3xl space-y-12">
+    <div className="max-w-3xl space-y-10">
 
-      {/* Background Glow */}
-      <div className="absolute -top-20 -left-20 w-72 h-72 bg-indigo-500/10 blur-3xl rounded-full"></div>
-      <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-500/10 blur-3xl rounded-full"></div>
-
-    
-      <header className="relative">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+      {/* HEADER */}
+      <header className="space-y-2">
+        <h1 className="text-3xl font-bold text-primary">
           Profile Settings
         </h1>
-        <p className="text-slate-500 mt-2 text-lg">
-          Update your personal information and keep your profile up to date.
-        </p>
 
-        <div className="mt-6 w-24 h-1 rounded-full bg-gradient-to-r from-indigo-600 to-blue-500"></div>
+        <p className="text-base-content/70">
+          Update your personal information.
+        </p>
       </header>
 
-    
-      <div className="relative bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl p-10 space-y-10">
+      {/* CARD */}
+      <div className="bg-base-200 border border-base-300 rounded-xl p-8 space-y-8 shadow-sm">
 
-   
-        <div className="flex flex-col items-center space-y-4">
-          <div className="relative group">
-            <img
-              src={photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Student"}
-              className="w-28 h-28 rounded-full border-4 border-white shadow-lg"
-              alt="Profile"
-            />
-            
-          </div>
-
-         
+        {/* Avatar */}
+        <div className="flex flex-col items-center gap-4">
+          <img
+            src={
+              photoURL ||
+              "https://api.dicebear.com/7.x/initials/svg?seed=User"
+            }
+            alt="Profile"
+            className="w-24 h-24 rounded-full border border-base-300"
+          />
         </div>
 
- 
+        {/* FORM */}
         <div className="space-y-6">
 
-      
-          <div>
-            <label className="text-sm font-medium text-slate-600">
-              Full Name
-            </label>
-            <div className="relative mt-2">
-              <User
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-500"
-              />
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
-              />
-            </div>
-          </div>
+          {/* Name */}
+          <FormInput
+            label="Full Name"
+            icon={<User size={16} />}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
           {/* Email */}
-          <div>
-            <label className="text-sm font-medium text-slate-600">
-              Email Address
-            </label>
-            <div className="relative mt-2">
-              <Mail
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500"
-              />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
-              />
-            </div>
-          </div>
+          <FormInput
+            label="Email Address"
+            type="email"
+            icon={<Mail size={16} />}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
           {/* Phone */}
-          <div>
-            <label className="text-sm font-medium text-slate-600">
-              Phone Number
-            </label>
-            <div className="relative mt-2">
-              <Phone
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600"
-              />
-              <input
-                type="tel"
-                value={phone}
-                placeholder="01XXXXXXXXX"
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border text-neutral-900 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
-              />
-            </div>
-          </div>
+          <FormInput
+            label="Phone Number"
+            type="tel"
+            icon={<Phone size={16} />}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="01XXXXXXXXX"
+          />
 
         </div>
 
-        {/* Save Button */}
+        {/* BUTTON */}
         <button
           onClick={handleUpdate}
-          className="w-full hover:cursor-pointer flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+          className="btn btn-primary w-full gap-2"
         >
-          <Save size={18} />
+          <Save size={16} />
           Save Changes
         </button>
 
+      </div>
+    </div>
+  );
+}
+
+/* ================= REUSABLE INPUT ================= */
+
+function FormInput({
+  label,
+  icon,
+  value,
+  onChange,
+  type = "text",
+  placeholder = "",
+}) {
+  return (
+    <div>
+      <label className="label">
+        <span className="label-text font-medium">
+          {label}
+        </span>
+      </label>
+
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 opacity-60">
+          {icon}
+        </span>
+
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className="input input-bordered w-full pl-10"
+        />
       </div>
     </div>
   );

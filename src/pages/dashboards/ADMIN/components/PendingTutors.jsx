@@ -17,13 +17,14 @@ export default function ManageTeachers() {
   const [loader, setLoader] = useState(false);
   const [changingId, setChangingId] = useState(null);
 
+  /* ================= FETCH ================= */
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
         setLoader(true);
         const res = await axios.get("/admin/allteachers");
-        setTeachers(res.data);
-      } catch (error) {
+        setTeachers(res.data || []);
+      } catch {
         Swal.fire("Error", "Failed to load teachers", "error");
       } finally {
         setLoader(false);
@@ -33,6 +34,7 @@ export default function ManageTeachers() {
     fetchTeachers();
   }, [axios]);
 
+  /* ================= ROLE CHANGE ================= */
   const handleChangeRole = async (teacher) => {
     const { value: newRole } = await Swal.fire({
       title: "Change Role",
@@ -45,7 +47,6 @@ export default function ManageTeachers() {
       inputValue: teacher.role,
       showCancelButton: true,
       confirmButtonText: "Update Role",
-      confirmButtonColor: "#6366f1",
     });
 
     if (!newRole || newRole === teacher.role) return;
@@ -58,7 +59,9 @@ export default function ManageTeachers() {
       });
 
       setTeachers((prev) =>
-        prev.map((t) => (t._id === teacher._id ? { ...t, role: newRole } : t)),
+        prev.map((t) =>
+          t._id === teacher._id ? { ...t, role: newRole } : t
+        )
       );
 
       Swal.fire({
@@ -71,92 +74,100 @@ export default function ManageTeachers() {
       Swal.fire(
         "Update Failed",
         error.response?.data?.message || "Server error",
-        "error",
+        "error"
       );
     } finally {
       setChangingId(null);
     }
   };
 
+  /* ================= ROLE UI ================= */
   const getRoleBadge = (role) => {
-    const styles = {
-      admin: "bg-red-100 text-red-600",
-      teacher: "bg-indigo-100 text-indigo-600",
-      student: "bg-emerald-100 text-emerald-600",
-    };
-    return styles[role] || "bg-gray-100 text-gray-600";
+    if (role === "admin") return "badge-error";
+    if (role === "teacher") return "badge-info";
+    return "badge-primary";
   };
 
   const getRoleIcon = (role) => {
-    if (role === "admin")
-      return <ShieldCheck size={14} className="text-red-500" />;
-    if (role === "teacher")
-      return <Briefcase size={14} className="text-indigo-500" />;
-    if (role === "student")
-      return <GraduationCap size={14} className="text-emerald-500" />;
+    if (role === "admin") return <ShieldCheck size={14} />;
+    if (role === "teacher") return <Briefcase size={14} />;
+    return <GraduationCap size={14} />;
   };
 
   if (loader) return <LoadingPage />;
 
   return (
-    <div className="relative space-y-12">
-      <div className="absolute -top-20 -left-20 w-72 h-72 bg-indigo-500/10 blur-3xl rounded-full"></div>
-      <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-500/10 blur-3xl rounded-full"></div>
+    <div className="space-y-10">
 
-      <header>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+      {/* HEADER */}
+      <header className="space-y-2">
+        <h1 className="text-3xl font-bold text-primary">
           Manage Teachers
         </h1>
-        <p className="text-slate-500 mt-2 text-lg">
+
+        <p className="text-base-content/70">
           Change teacher roles dynamically.
         </p>
       </header>
 
-      <div className="grid gap-8">
+      {/* LIST */}
+      <div className="grid gap-6">
+
         {teachers.map((teacher) => (
           <div
             key={teacher._id}
-            className="group bg-white/80 backdrop-blur-xl border border-white/40 rounded-3xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+            className="bg-base-200 border border-base-300 rounded-xl p-6 shadow-sm hover:shadow-md transition"
           >
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div className="flex items-center gap-6">
-                <div className="p-5 bg-indigo-100 rounded-2xl shadow-inner">
-                  <User size={24} className="text-indigo-600" />
+
+              {/* USER INFO */}
+              <div className="flex items-center gap-5">
+
+                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <User size={20} />
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900">
+                  <h3 className="font-semibold text-lg">
                     {teacher.name}
                   </h3>
 
-                  <p className="text-sm text-slate-500 mt-1">{teacher.email}</p>
+                  <p className="text-sm text-base-content/70">
+                    {teacher.email}
+                  </p>
 
-                  <div
-                    className={`mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${getRoleBadge(
-                      teacher.role,
+                  <span
+                    className={`badge mt-2 flex items-center gap-1 ${getRoleBadge(
+                      teacher.role
                     )}`}
                   >
                     {getRoleIcon(teacher.role)}
                     {teacher.role}
-                  </div>
+                  </span>
                 </div>
+
               </div>
 
+              {/* ACTION */}
               <button
                 disabled={changingId === teacher._id}
                 onClick={() => handleChangeRole(teacher)}
-                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                className="btn btn-primary btn-sm"
               >
-                <RefreshCw size={18} />
+                <RefreshCw size={16} />
                 Change Role
               </button>
+
             </div>
           </div>
         ))}
 
         {teachers.length === 0 && (
-          <p className="text-center text-slate-500">No teachers found.</p>
+          <div className="text-center text-base-content/60">
+            No teachers found.
+          </div>
         )}
+
       </div>
     </div>
   );

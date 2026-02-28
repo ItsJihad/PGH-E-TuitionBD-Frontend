@@ -210,13 +210,7 @@ function Headerbar() {
             <div className="pt-8 border-t border-base-content/10">
               {currentUser ? (
                 <>
-                  <Link
-                    to="/profile"
-                    onClick={() => setMobileOpen(false)}
-                    className="block py-3 text-sm text-base-content hover:text-primary"
-                  >
-                    Profile
-                  </Link>
+                  
                   <Link
                     to="/dashboard"
                     onClick={() => setMobileOpen(false)}

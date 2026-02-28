@@ -7,111 +7,106 @@ import {
 
 export default function RevenueHistory() {
   return (
-    <div className="relative space-y-12">
+    <div className="space-y-10">
 
-      {/* Background Glow */}
-      <div className="absolute -top-20 -left-20 w-72 h-72 bg-emerald-500/10 blur-3xl rounded-full"></div>
-      <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-500/10 blur-3xl rounded-full"></div>
-
-      {/* Header */}
-      <header className="relative">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
+      {/* HEADER */}
+      <header className="space-y-2">
+        <h1 className="text-3xl font-bold text-primary">
           Revenue History
         </h1>
-        <p className="text-slate-500 mt-2 text-lg">
+
+        <p className="text-base-content/70">
           Track your completed payments and total earnings.
         </p>
-
-        <div className="mt-6 w-24 h-1 rounded-full bg-gradient-to-r from-emerald-600 to-teal-500"></div>
       </header>
 
-      {/* Summary Cards */}
+      {/* SUMMARY CARDS */}
       <div className="grid sm:grid-cols-3 gap-6">
 
         <SummaryCard
           title="Total Earnings"
           value="৳20,000"
-          icon={<DollarSign className="text-emerald-600" size={20} />}
+          icon={<DollarSign size={18} />}
         />
 
         <SummaryCard
           title="This Month"
           value="৳12,000"
-          icon={<TrendingUp className="text-blue-600" size={20} />}
+          icon={<TrendingUp size={18} />}
         />
 
         <SummaryCard
           title="Total Transactions"
           value="2"
-          icon={<BookOpen className="text-indigo-600" size={20} />}
+          icon={<BookOpen size={18} />}
         />
 
       </div>
 
-      {/* Revenue Table */}
-      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl p-8 shadow-lg">
+      {/* TABLE CARD */}
+      <div className="bg-base-200 border border-base-300 rounded-xl shadow-sm">
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="table table-zebra">
 
-            <thead className="text-slate-500 border-b">
+            <thead>
               <tr>
-                <th className="py-4">Tuition</th>
+                <th>Tuition</th>
                 <th>Amount</th>
                 <th>Date</th>
                 <th>Status</th>
               </tr>
             </thead>
 
-            <tbody className="divide-y">
+            <tbody>
 
-              <tr className="hover:bg-slate-50 transition">
-                <td className="py-4">
-                  <p className="font-semibold text-slate-900">
-                    Mathematics - Class 10
+              <tr>
+                <td>
+                  <p className="font-semibold">
+                    Mathematics — Class 10
                   </p>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-base-content/50">
                     Tuition ID: #203948
                   </p>
                 </td>
 
-                <td className="text-emerald-600 font-bold">
+                <td className="font-bold text-success">
                   ৳8,000
                 </td>
 
-                <td className="text-slate-500 flex items-center gap-2">
+                <td className="flex items-center gap-2 text-base-content/70">
                   <Calendar size={14} />
                   Jan 12, 2026
                 </td>
 
                 <td>
-                  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-600 text-xs font-semibold">
+                  <span className="badge badge-success">
                     Paid
                   </span>
                 </td>
               </tr>
 
-              <tr className="hover:bg-slate-50 transition">
-                <td className="py-4">
-                  <p className="font-semibold text-slate-900">
-                    Physics - Class 12
+              <tr>
+                <td>
+                  <p className="font-semibold">
+                    Physics — Class 12
                   </p>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-base-content/50">
                     Tuition ID: #203949
                   </p>
                 </td>
 
-                <td className="text-emerald-600 font-bold">
+                <td className="font-bold text-success">
                   ৳12,000
                 </td>
 
-                <td className="text-slate-500 flex items-center gap-2">
+                <td className="flex items-center gap-2 text-base-content/70">
                   <Calendar size={14} />
                   Feb 03, 2026
                 </td>
 
                 <td>
-                  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-600 text-xs font-semibold">
+                  <span className="badge badge-success">
                     Paid
                   </span>
                 </td>
@@ -128,23 +123,30 @@ export default function RevenueHistory() {
   );
 }
 
-/* Reusable Summary Card */
+/* ================= SUMMARY CARD ================= */
 
 function SummaryCard({ title, value, icon }) {
   return (
-    <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-2xl p-6 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+    <div className="bg-base-200 border border-base-300 rounded-xl p-6 hover:shadow-md transition">
+
       <div className="flex items-center justify-between">
+
         <div>
-          <p className="text-sm text-slate-500">{title}</p>
-          <h2 className="text-2xl font-bold text-slate-900 mt-1">
+          <p className="text-sm text-base-content/70">
+            {title}
+          </p>
+
+          <h2 className="text-2xl font-bold mt-1">
             {value}
           </h2>
         </div>
 
-        <div className="p-3 bg-emerald-100 rounded-xl">
+        <div className="p-3 rounded-lg bg-primary/10 text-primary">
           {icon}
         </div>
+
       </div>
+
     </div>
   );
 }
