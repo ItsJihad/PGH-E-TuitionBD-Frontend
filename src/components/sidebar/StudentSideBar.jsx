@@ -11,8 +11,10 @@ import {
 import { NavLink, Link } from "react-router";
 import MobileNav from "../mobileNav/MobileNav";
 import { SiEducative } from "react-icons/si";
+import UseAuth from "../../hooks/UseAuth";
 
 function StudentSideBar({ outlet }) {
+  const { LoggOut } = UseAuth();
   return (
     <div className="drawer md:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -130,7 +132,7 @@ function StudentSideBar({ outlet }) {
           </ul>
 
           {/* LOGOUT */}
-          <div className="pt-6 border-t border-base-300">
+          <div onClick={LoggOut} className="pt-6 hover:cursor-pointer border-t border-base-300">
             <Link
               to="/"
               className="flex items-center gap-2 text-sm hover:text-error transition"

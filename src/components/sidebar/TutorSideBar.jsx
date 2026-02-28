@@ -1,6 +1,8 @@
 import React from 'react'
+import UseAuth from '../../hooks/UseAuth';
 
 function TutorSideBar() {
+  const { LoggOut } = UseAuth();
   return (
     <div className="drawer md:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle " />
@@ -67,7 +69,7 @@ function TutorSideBar() {
               </Link>
             </li>
 
-            <li className=" rounded p-2 shadow-sm shadow-gray-300">
+            <li onClick={LoggOut} className=" rounded hover:cursor-pointer p-2 shadow-sm shadow-gray-300">
               <Link to="/">
                 <LogOut />
                 <span className="hidden lg:block">Logout</span>

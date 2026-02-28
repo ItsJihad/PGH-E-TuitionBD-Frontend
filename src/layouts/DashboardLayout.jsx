@@ -23,7 +23,7 @@ export const DashboardLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState("light");
 
-  const { currentUser } = UseAuth();
+  const { currentUser, LoggOut } = UseAuth();
   const axios = useAxiosSecure();
 
   const [user, setUser] = useState("");
@@ -160,7 +160,7 @@ export const DashboardLayout = () => {
         </nav>
 
         {/* Logout */}
-        <div className="mt-auto p-4 border-t border-base-300">
+        <div onClick={LoggOut} className="mt-auto  p-4 border-t border-base-300 hover:cursor-pointer">
           <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-error hover:bg-error/10 transition">
             <LogOut size={18} />
             Logout

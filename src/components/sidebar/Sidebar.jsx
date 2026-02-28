@@ -3,7 +3,6 @@ import {
   BookOpen,
   CreditCard,
   House,
-  LayoutDashboard,
   LogOut,
   NotebookPen,
   School,
@@ -11,8 +10,11 @@ import {
 
 import { Link } from "react-router";
 import MobileNav from "../mobileNav/MobileNav";
+import UseAuth from "../../hooks/UseAuth";
 
 function Sidebar({ outlet }) {
+  const { LoggOut } = UseAuth();
+
   return (
     <div className="drawer md:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle " />
@@ -41,8 +43,6 @@ function Sidebar({ outlet }) {
                 <span className="hidden lg:block">Homepage</span>
               </Link>
             </li>
-
-            
 
             <li className=" rounded p-2 shadow-sm shadow-gray-300">
               <Link to="/dashboard/my-tuition">
@@ -79,7 +79,10 @@ function Sidebar({ outlet }) {
               </Link>
             </li>
 
-            <li className=" rounded p-2 shadow-sm shadow-gray-300">
+            <li
+              onClick={LoggOut}
+              className=" rounded hover:cursor-pointer p-2 shadow-sm shadow-gray-300"
+            >
               <Link to="/">
                 <LogOut />
                 <span className="hidden lg:block">Logout</span>
