@@ -8,6 +8,7 @@ export default function Loginpage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm();
 
@@ -56,25 +57,26 @@ export default function Loginpage() {
     }
   };
 
+  /* ================= DEMO AUTO FILL ================= */
+  const fillDemo = (email, password) => {
+    setValue("email", email);
+    setValue("password", password);
+  };
+
   return (
     <div className="min-h-screen bg-base-100 text-base-content flex items-center justify-center px-4 py-16">
-
       <main className="w-full max-w-md">
-
-        {/* CARD */}
         <div className="bg-base-200 border border-base-300 rounded-xl shadow-lg p-8">
 
           {/* HEADER */}
           <header className="text-center mb-8">
-            <h1 className="text-2xl font-bold">
-              Welcome Back
-            </h1>
+            <h1 className="text-2xl font-bold">Welcome Back</h1>
             <p className="text-sm text-base-content/70">
               Sign in to continue to eTuitionBd
             </p>
           </header>
 
-          {/* FIREBASE ERROR */}
+          {/* ERROR MESSAGE */}
           {authError && (
             <div className="alert alert-error mb-6 text-sm">
               {authError}
@@ -159,13 +161,64 @@ export default function Loginpage() {
             Or continue with
           </div>
 
-          {/* GOOGLE */}
+          {/* GOOGLE LOGIN */}
           <button
             onClick={googleSignIn}
             className="btn btn-outline w-full"
           >
             Continue with Google
           </button>
+
+          {/* ================= DEMO CREDENTIALS ================= */}
+          <div className="mt-8 bg-base-100 border border-base-300 rounded-lg p-5 text-sm">
+
+            <h3 className="font-semibold text-base-content mb-4 text-center">
+              Demo Credentials
+            </h3>
+
+            <div className="space-y-4">
+
+              {/* Student */}
+              <button
+                type="button"
+                onClick={() =>
+                  fillDemo("demo.student@etuitionbd.com", "123456")
+                }
+                className="w-full text-left p-3 rounded-lg bg-base-200 hover:bg-primary/10 transition"
+              >
+                <p className="font-semibold text-primary mb-1">Student</p>
+                <p>Email: demo.student@etuitionbd.com</p>
+                <p>Password: 123456</p>
+              </button>
+
+              {/* Teacher */}
+              <button
+                type="button"
+                onClick={() =>
+                  fillDemo("demo.teacher@etuitionbd.com", "123456")
+                }
+                className="w-full text-left p-3 rounded-lg bg-base-200 hover:bg-secondary/10 transition"
+              >
+                <p className="font-semibold text-secondary mb-1">Teacher</p>
+                <p>Email: demo.teacher@etuitionbd.com</p>
+                <p>Password: 123456</p>
+              </button>
+
+              {/* Admin */}
+              <button
+                type="button"
+                onClick={() =>
+                  fillDemo("demo.admin@etuitionbd.com", "123456")
+                }
+                className="w-full text-left p-3 rounded-lg bg-base-200 hover:bg-accent/10 transition"
+              >
+                <p className="font-semibold text-accent mb-1">Admin</p>
+                <p>Email: demo.admin@etuitionbd.com</p>
+                <p>Password: 123456</p>
+              </button>
+
+            </div>
+          </div>
 
           {/* LINKS */}
           <div className="mt-8 text-center text-sm text-base-content/70">
